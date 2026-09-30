@@ -79,13 +79,14 @@ def running_average(numbers: list[float]) -> list[float]:
         >>> running_average([])
         []
     """
-    list=[]
+    lst=[]
 
     for i,v in enumerate(numbers): 
         
-        list.append((numbers[0]+numbers[i])/2)
+        # lst.append((numbers[0]+numbers[i])/2)
+        lst.append(sum(numbers[:i+1])/(i+1))
 
-    return list
+    return lst
     # raise NotImplementedError("Implement running_average()")
 # print(running_average([10.0, 20.0, 30.0, 50]))
 
@@ -231,10 +232,17 @@ def count_occurrences(items: list) -> dict:
         >>> count_occurrences([])
         {}
     """
-    from collections import Counter
-    result = dict(Counter(items))
+    # from collections import Counter
+    # result = dict(Counter(items))
 
-    return result
+    counts = {}
+    for item in items:
+        if item not in counts:
+            counts[item] = 0
+        counts[item] += 1
+        
+    return counts
+
     # raise NotImplementedError("Implement count_occurrences()")
 
 
@@ -316,7 +324,7 @@ def deep_get(d: dict, path: str, default: object = None) -> object:
 
     result = d
     for i in pathList:
-        if i not in result:
+        if not isinstance(result, dict) or i not in result:
             return default
         result = result[i]
 

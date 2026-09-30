@@ -43,7 +43,31 @@ def load_songs(path: Path) -> list[dict]:
         >>> isinstance(songs[0]["year"], int)
         True
     """
-    raise NotImplementedError("Implement load_songs()")
+
+    with open(path, "r") as f:
+        text = f.readlines()
+    
+    base_keys = text[0].strip().split(",")
+    result = []
+
+    for line in text[1:]:
+        record = {}
+        list_line = line.strip().split(",")
+        for i,v in enumerate(list_line):
+            record[base_keys[i]] = v
+        
+        record['year'] = int(record['year'])
+        record['weeks_on_chart'] = int(record['weeks_on_chart'])
+        record['peak_position'] = int(record['peak_position'])
+        record['streams_millions'] = float(record['streams_millions'])
+
+        result.append(record)
+
+    return result
+    
+# print(load_songs(Path(r"C:\Users\horoe\Documents\GitHub\ramaz-ml-course-2026-student\00_python_bootcamp\hw\data\songs.csv")))
+
+    # raise NotImplementedError("Implement load_songs()")
 
 
 class SongRanker:
@@ -55,7 +79,6 @@ class SongRanker:
 
     def score(self, song: dict) -> float:
         """Return the value used to rank this song. Higher is better.
-
         Subclasses must override this.
         """
         raise NotImplementedError("Implement SongRanker.score()")
@@ -78,21 +101,28 @@ class SongRanker:
             >>> top[0]["streams_millions"] >= top[1]["streams_millions"]
             True
         """
-        raise NotImplementedError("Implement SongRanker.rank()")
+        all_ranked_songs = sorted(songs,key=self.score, reverse=True)
+        
+        return all_ranked_songs[:n]
+        # raise NotImplementedError("Implement SongRanker.rank()")
 
-
+        
 class StreamsRanker(SongRanker):
     """Ranks songs by total streams_millions."""
 
     def score(self, song: dict) -> float:
-        raise NotImplementedError("Implement StreamsRanker.score()")
+        criteria_score = song['streams_millions']
+        return criteria_score
+        # raise NotImplementedError("Implement StreamsRanker.score()")
 
 
 class LongevityRanker(SongRanker):
     """Ranks songs by weeks_on_chart (how long they stuck around)."""
-
+    
     def score(self, song: dict) -> float:
-        raise NotImplementedError("Implement LongevityRanker.score()")
+        criteria_score = song['weeks_on_chart']
+        return criteria_score
+        # raise NotImplementedError("Implement LongevityRanker.score()")
 
 
 def avg_weeks_by_genre(songs: list[dict]) -> dict[str, float]:
@@ -111,7 +141,20 @@ def avg_weeks_by_genre(songs: list[dict]) -> dict[str, float]:
         >>> all(isinstance(v, float) for v in avgs.values())
         True
     """
-    raise NotImplementedError("Implement avg_weeks_by_genre()")
+    result = {}   
+
+    for song in songs:
+            group_name = song['genre']
+            if group_name not in result:
+                result[group_name] = []
+            result[group_name].append(song['weeks_on_chart'])
+
+    averages = {}
+    for genre, weeks in result.items():
+        averages[genre] = sum(weeks)/len(weeks)
+
+    return averages
+    # raise NotImplementedError("Implement avg_weeks_by_genre()")
 
 
 def most_streamed_artist(songs: list[dict]) -> str:
@@ -130,8 +173,24 @@ def most_streamed_artist(songs: list[dict]) -> str:
         >>> isinstance(artist, str)
         True
     """
-    raise NotImplementedError("Implement most_streamed_artist()")
+    artists_streams = {}
 
+    for song in songs:
+        group_name = song['artist']
+        if group_name not in artists_streams:
+            artists_streams[group_name] = []
+        artists_streams[group_name].append(song['streams_millions'])
+
+    sums = {}
+    for artist, streams in artists_streams.items():
+        sums[artist] = sum(streams)
+
+    top_artist = max(sums, key = sums.get)
+
+    return top_artist
+    # raise NotImplementedError("Implement most_streamed_artist()")/
+
+    
 
 def hits_per_year(songs: list[dict], max_position: int = 10) -> dict[int, int]:
     """Count songs with peak_position <= max_position, grouped by year.
@@ -153,7 +212,27 @@ def hits_per_year(songs: list[dict], max_position: int = 10) -> dict[int, int]:
         >>> all(isinstance(k, int) for k in hits.keys())
         True
     """
-    raise NotImplementedError("Implement hits_per_year()")
+    # tops_count = 0
+    # for song in songs:
+
+    #     peak_pos = song['streams.millions'
+    #         if peak_pos <=
+    #     tops_count += 1
+    yearly_hits_list = {}
+
+    for song in songs:
+        if song['peak_position'] <= max_position:
+            group_name = song['year']
+            if group_name not in yearly_hits_list:
+                yearly_hits_list[group_name] = []
+            yearly_hits_list[group_name].append(song['title'])
+
+    yearly_hits = {}
+    for year in yearly_hits_list:
+        yearly_hits[year]=len(yearly_hits_list[year])
+
+    return yearly_hits
+    # raise NotImplementedError("Implement hits_per_year()")
 
 
 # ── Main: print results for writeup.md ────────────────────────────────────────

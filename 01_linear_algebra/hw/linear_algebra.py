@@ -40,8 +40,13 @@ def vector_add(u: list[float], v: list[float]) -> list[float]:
         Think about how to iterate over two lists simultaneously, pairing their
         elements at each position.
     """
-    raise NotImplementedError("Implement vector_add()")
+    result = [u[i]+v[i] for i in range(len(u))]
+    # raise NotImplementedError("Implement vector_add()")
+    return result
 
+# print(vector_add([1.0, 2.0], [3.0, 4.0]))
+
+    
 
 def scalar_multiply(c: float, v: list[float]) -> list[float]:
     """Scale every element of a vector by a scalar.

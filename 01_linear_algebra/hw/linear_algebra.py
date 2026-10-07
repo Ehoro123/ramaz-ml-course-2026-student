@@ -66,7 +66,10 @@ def scalar_multiply(c: float, v: list[float]) -> list[float]:
         You know how to visit every element in a list. What would you do
         to each one?
     """
-    raise NotImplementedError("Implement scalar_multiply()")
+    # raise NotImplementedError("Implement scalar_multiply()")
+    result = [c*i for i in v]
+
+    return result
 
 
 def dot_product(u: list[float], v: list[float]) -> float:
@@ -90,7 +93,11 @@ def dot_product(u: list[float], v: list[float]) -> float:
         You already know how to pair elements from two lists. The dot product
         needs one more step: combine those products into a single number.
     """
-    raise NotImplementedError("Implement dot_product()")
+    result = sum([u[i]*v[i] for i in range(len(u))])
+    # note: comprehensions are genuinely so fun and satisfying once you get to know them
+    return result
+
+    # raise NotImplementedError("Implement dot_product()")
 
 
 def vector_magnitude(v: list[float]) -> float:

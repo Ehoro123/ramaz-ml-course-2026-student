@@ -45,7 +45,13 @@ def rotation_matrix(degrees: float) -> torch.Tensor:
         the `math` module has a converter. Then assemble those four entries
         into a 2x2 tensor.
     """
-    raise NotImplementedError("Implement rotation_matrix()")
+    radians = math.radians(degrees)
+
+    R = torch.tensor([[math.cos(radians), -math.sin(radians)], [math.sin(radians), math.cos(radians)]])
+
+    return R
+
+    # raise NotImplementedError("Implement rotation_matrix()")
 
 
 def scaling_matrix(sx: float, sy: float) -> torch.Tensor:
@@ -69,7 +75,11 @@ def scaling_matrix(sx: float, sy: float) -> torch.Tensor:
         tensor([[2.0000, 0.0000],
                 [0.0000, 0.5000]])
     """
-    raise NotImplementedError("Implement scaling_matrix()")
+
+    S = torch.tensor([[sx, 0], [0, sy]], dtype = torch.float32)
+
+    return S
+    # raise NotImplementedError("Implement scaling_matrix()")
 
 
 def shear_matrix(k: float) -> torch.Tensor:
@@ -93,7 +103,9 @@ def shear_matrix(k: float) -> torch.Tensor:
         tensor([[1.0000, 0.8000],
                 [0.0000, 1.0000]])
     """
-    raise NotImplementedError("Implement shear_matrix()")
+    H = torch.tensor([[1, k],[0, 1]], dtype = torch.float32)
+    return H
+    # raise NotImplementedError("Implement shear_matrix()")
 
 
 def apply_transform(points: torch.Tensor, matrix: torch.Tensor) -> torch.Tensor:
@@ -126,7 +138,8 @@ def apply_transform(points: torch.Tensor, matrix: torch.Tensor) -> torch.Tensor:
         row equal M applied to the corresponding input point? Your return
         value must be (N, 2), one point per row.
     """
-    raise NotImplementedError("Implement apply_transform()")
+    return points @ matrix.t()
+    # raise NotImplementedError("Implement apply_transform()")
 
 
 # ── Teacher-provided plotting code — do not modify anything below ─────────────

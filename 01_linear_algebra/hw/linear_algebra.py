@@ -119,7 +119,14 @@ def vector_magnitude(v: list[float]) -> float:
         Look at the formula in the docstring — it expresses magnitude in terms
         of an operation you've already implemented.
     """
-    raise NotImplementedError("Implement vector_magnitude()")
+
+    # magnitude = math.sqrt(sum([i^2 for i in v]))
+    
+    magnitude = math.sqrt(sum([i*i for i in v]))
+
+    return magnitude
+
+    # raise NotImplementedError("Implement vector_magnitude()")
 
 
 def normalize_vector(v: list[float]) -> list[float]:
@@ -146,7 +153,16 @@ def normalize_vector(v: list[float]) -> list[float]:
         to be true about the magnitude before dividing, and what should happen
         if that condition fails.
     """
-    raise NotImplementedError("Implement normalize_vector()")
+    
+    mag = vector_magnitude(v)
+
+    if mag == 0:
+        raise ValueError
+
+    normalized = [i/mag for i in v]
+
+    return normalized
+    # raise NotImplementedError("Implement normalize_vector()")
 
 
 def matrix_add(A: list[list[float]], B: list[list[float]]) -> list[list[float]]:
@@ -170,7 +186,14 @@ def matrix_add(A: list[list[float]], B: list[list[float]]) -> list[list[float]]:
         You have a function that adds two vectors. How could you apply it to
         each pair of corresponding rows?
     """
-    raise NotImplementedError("Implement matrix_add()")
+
+    result = [vector_add(A[i],B[i]) for i in range(len(A))]
+    
+    # result = [u[i]+v[i] for i in range(len(u))]
+
+    return result
+
+    # raise NotImplementedError("Implement matrix_add()")
 
 
 def matrix_vector_multiply(A: list[list[float]], v: list[float]) -> list[float]:
@@ -196,7 +219,11 @@ def matrix_vector_multiply(A: list[list[float]], v: list[float]) -> list[float]:
         computes exactly what each output element requires — apply it across the
         rows.
     """
-    raise NotImplementedError("Implement matrix_vector_multiply()")
+
+    result = [dot_product(row,v) for row in A]
+
+    return result
+    # raise NotImplementedError("Implement matrix_vector_multiply()")
 
 
 def matrix_multiply(A: list[list[float]], B: list[list[float]]) -> list[list[float]]:
@@ -222,7 +249,20 @@ def matrix_multiply(A: list[list[float]], B: list[list[float]]) -> list[list[flo
         could turn columns into something easier to work with. You may implement
         the next helper first.
     """
-    raise NotImplementedError("Implement matrix_multiply()")
+    # i can use my dot product and matrix transpose functions for this problem
+    # matrix_transpose()
+    # dot_product() only accepts 2 vectors/lists
+    # just realized what a doc string actually is and ethan also just realized when i showed him
+    # I'm puzzled on why we multiply by the column, it just seems weird in practice but I'm sure there's a reason why
+
+    # C = [dot_product(A[i],matrix_transpose(B)[i]) for i in range(len(A))] 
+    # [[dot_product(A[i],column) for column in matrix_transpose(B)] for i in range(len(A))] 
+    C = [[dot_product(row,column) for column in matrix_transpose(B)] for row in A] 
+    # I think this should work, once again I don't fully understand why multiplying 
+    # means this way and not99 the dot products of the common rows or something but 
+    # code/pattern wise i think this should work.
+    return C
+    # raise NotImplementedError("Implement matrix_multiply()")
 
 
 def matrix_transpose(A: list[list[float]]) -> list[list[float]]:
@@ -248,7 +288,14 @@ def matrix_transpose(A: list[list[float]]) -> list[list[float]]:
         separate arguments. Either way, check the type of what you build
         against this function's return annotation before you trust it.
     """
-    raise NotImplementedError("Implement matrix_transpose()")
+    new_row_length = len(A)
+    number_new_rows = len(A[0])
+
+    A_t = [[row[j] for row in A] for j in range(number_new_rows)]
+    # i think this works
+
+    return A_t
+    # raise NotImplementedErraor("Implement matrix_transpose()")
 
 
 # ── Part 2: PyTorch Mirrors ───────────────────────────────────────────────────
@@ -276,7 +323,9 @@ def dot_product_torch(u: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
         In Part 1 this took you a comprehension and a sum. PyTorch has a single
         function for it — check the lecture cheat sheet.
     """
-    raise NotImplementedError("Implement dot_product_torch()")
+    result = torch.dot(u,v)
+    return result
+    # raise NotImplementedError("Implement dot_product_torch()")
 
 
 def vector_magnitude_torch(v: torch.Tensor) -> torch.Tensor:
@@ -296,7 +345,9 @@ def vector_magnitude_torch(v: torch.Tensor) -> torch.Tensor:
         The norm of a vector is such a common operation that torch.linalg
         provides it directly.
     """
-    raise NotImplementedError("Implement vector_magnitude_torch()")
+    result = torch.linalg.norm(v)
+    return result
+    # raise NotImplementedError("Implement vector_magnitude_torch()")
 
 
 def normalize_vector_torch(v: torch.Tensor) -> torch.Tensor:
@@ -319,7 +370,15 @@ def normalize_vector_torch(v: torch.Tensor) -> torch.Tensor:
         Dividing a tensor by a scalar divides every element — no loop needed.
         Remember to check for the zero vector first, just like in Part 1.
     """
-    raise NotImplementedError("Implement normalize_vector_torch()")
+    mag = vector_magnitude_torch(v)
+
+    if mag == 0:
+        raise ValueError
+
+    return v/mag
+
+    # return torch.nn.functional.normalize(v)
+    # raise NotImplementedError("Implement normalize_vector_torch()")
 
 
 def matrix_vector_multiply_torch(A: torch.Tensor, v: torch.Tensor) -> torch.Tensor:
@@ -341,7 +400,10 @@ def matrix_vector_multiply_torch(A: torch.Tensor, v: torch.Tensor) -> torch.Tens
     Hint:
         The @ operator from lecture handles matrix-vector products too.
     """
-    raise NotImplementedError("Implement matrix_vector_multiply_torch()")
+
+    return A @ v
+
+    # raise NotImplementedError("Implement matrix_vector_multiply_torch()")
 
 
 def matrix_multiply_torch(A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:
@@ -364,7 +426,9 @@ def matrix_multiply_torch(A: torch.Tensor, B: torch.Tensor) -> torch.Tensor:
         tensor([[19., 22.],
                 [43., 50.]])
     """
-    raise NotImplementedError("Implement matrix_multiply_torch()")
+
+    return A @ B
+    # raise NotImplementedError("Implement matrix_multiply_torch()")
 
 
 def matrix_transpose_torch(A: torch.Tensor) -> torch.Tensor:
@@ -386,7 +450,10 @@ def matrix_transpose_torch(A: torch.Tensor) -> torch.Tensor:
         In Part 1 this took you a whole comprehension. In PyTorch the transpose
         is a single attribute access — see the lecture cheat sheet.
     """
-    raise NotImplementedError("Implement matrix_transpose_torch()")
+    # torch.transpose(A) = A.T = A.t() cant do just A.t
+    return A.T
+
+    # raise NotImplementedError("Implement matrix_transpose_torch()")
 
 
 # ── Part 2b: Harder Problems ──────────────────────────────────────────────────
@@ -429,7 +496,10 @@ def cosine_similarity(u: torch.Tensor, v: torch.Tensor) -> float:
         Part 2. Handle the zero-vector case before dividing. Do not use
         torch.nn.functional.cosine_similarity.
     """
-    raise NotImplementedError("Implement cosine_similarity()")
+
+    return dot_product_torch(u,v)/(normalize_vector_torch(u)*normalize_vector_torch(v))
+
+    # raise NotImplementedError("Implement cosine_similarity()")
 
 
 def row_normalize(A: torch.Tensor) -> torch.Tensor:
@@ -465,12 +535,24 @@ def row_normalize(A: torch.Tensor) -> torch.Tensor:
         gives you a tensor of booleans) and raise ValueError.
         Do not use torch.nn.functional.normalize.
     """
-    raise NotImplementedError("Implement row_normalize()")
+    
+    mags = torch.linalg.norm(A, dim=1, keepdim=True)
+
+    if (mags == 0).any():
+        raise ValueError
+
+    # columnMags = matrix_transpose_torch(mags)
+
+    return A / mags
+
+
+
+
+    # raise NotImplementedError("Implement row_normalize()")
 
 
 def pairwise_distances(A: torch.Tensor) -> torch.Tensor:
     """Compute the pairwise Euclidean distance between every row of A.
-
     For a matrix with m rows, returns an (m, m) matrix where entry (i, j)
     is the Euclidean distance between row i and row j of A. The diagonal
     is all zeros (distance from a row to itself) and the matrix is
@@ -498,5 +580,14 @@ def pairwise_distances(A: torch.Tensor) -> torch.Tensor:
         axis you can broadcast along) is the tool for making those two copies;
         you still have to decide which axis each copy gets and how to collapse
         the result into distances. Do not use torch.cdist.
+        dist(x,y)=∥xy+ϵe∥ what the heck does this mean
     """
-    raise NotImplementedError("Implement pairwise_distances()")
+    m = A.shape[0]
+    Frame = torch.zeroes(m,m)
+
+    for i in m:
+        for j in m:
+            Frame[i,j] = torch.linalg.norm(A[i]-A[j])
+
+    return Frame
+    # raise NotImplementedError("Implement pairwise_distances()")

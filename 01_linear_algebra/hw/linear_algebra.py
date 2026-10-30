@@ -496,8 +496,14 @@ def cosine_similarity(u: torch.Tensor, v: torch.Tensor) -> float:
         Part 2. Handle the zero-vector case before dividing. Do not use
         torch.nn.functional.cosine_similarity.
     """
+    mag_u = vector_magnitude_torch(u)
+    mag_v = vector_magnitude_torch(v)
+    if mag_u == 0 or mag_v == 0:
+        raise ValueError
 
-    return dot_product_torch(u,v)/(normalize_vector_torch(u)*normalize_vector_torch(v))
+
+    return float(dot_product_torch(u,v)/(mag_u*mag_v))
+    # return dot_product_torch(u,v)/(normalize_vector_torch(u)*normalize_vector_torch(v))
 
     # raise NotImplementedError("Implement cosine_similarity()")
 
@@ -583,10 +589,10 @@ def pairwise_distances(A: torch.Tensor) -> torch.Tensor:
         dist(x,y)=∥xy+ϵe∥ what the heck does this mean
     """
     m = A.shape[0]
-    Frame = torch.zeroes(m,m)
+    Frame = torch.zeros(m,m)
 
-    for i in m:
-        for j in m:
+    for i in range(m):
+        for j in range(m):
             Frame[i,j] = torch.linalg.norm(A[i]-A[j])
 
     return Frame

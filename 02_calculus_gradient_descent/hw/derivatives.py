@@ -185,6 +185,7 @@ def autograd_partial_gradients(x_val: float, y_val: float) -> tuple[float, float
     y = torch.tensor(y_val, requires_grad=True)
     f = x**2 + 3*x*y + 2*y**2 
     f.backward()
+    
     return (x.grad.item(), y.grad.item())
     # raise NotImplementedError("Implement autograd_partial_gradients()")
 
